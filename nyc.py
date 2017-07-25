@@ -10,18 +10,23 @@ from operator import itemgetter
 config = configparser.ConfigParser()
 config.read("nyc.ini")
 apikey = config["api"]["key"]
+
+def printRoute(id,name,time):
+    if time == '0':
+        print('\x1b[0;30;41m ' + id + ' \x1b[0m', '\x1b[1;31;40m' + name + '\x1b[0m', '\x1b[1;31;40m' + time + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
+    else:
+        print('\x1b[0;30;41m ' + id + ' \x1b[0m', '\x1b[1;32;40m' + name + '\x1b[0m', '\x1b[1;32;40m' + time + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
+
+dict = {}
+dictCount = 0
+destinations = {'1': " Van Cort Park 242 St    ",'2':" Wakefield-241 St        ",'3':" Harlem-148 St           "}
+
 feed = gtfs_realtime_pb2.FeedMessage()
 response = requests.get(apikey)
 responseString = response.content
 feed.ParseFromString(responseString)
-
-dict = {}
-dictCount = 0
-
-new_york = timezone('America/New_York')
-ny_time = datetime.now(new_york)
-print ("Times Sq-42 St -", ny_time.strftime('%H:%M:%S'))
-
+if not responseString:
+    print("MTA is Busy")
 for entity in feed.entity:
      if entity.HasField('trip_update'):
         tu = entity.trip_update
@@ -66,33 +71,10 @@ tub1 = tubListItem1[1]
 tub2 = tubListItem2[1]
 time1 = str(tub1[0])
 time2 = str(tub2[0])
-if tub1[1] == '1':
-    if time1 == '0':
-        print('\x1b[0;30;41m ' + tub1[1] + ' \x1b[0m', '\x1b[1;31;40m' + " Van Cort Park 242 St    " + '\x1b[0m', '\x1b[1;31;40m' + time1 + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
-    else:
-        print('\x1b[0;30;41m ' + tub1[1] + ' \x1b[0m', '\x1b[1;32;40m' + " Van Cort Park 242 St    " + '\x1b[0m', '\x1b[1;32;40m' + time1 + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
-elif tub1[1] == '2':
-    if time1 == '0':
-        print('\x1b[0;30;41m ' + tub1[1] + ' \x1b[0m', '\x1b[1;31;40m' + " Wakefield-241 St        " + '\x1b[0m', '\x1b[1;31;40m' + time1 + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
-    else:
-        print('\x1b[0;30;41m ' + tub1[1] + ' \x1b[0m', '\x1b[1;32;40m' + " Wakefield-241 St        " + '\x1b[0m', '\x1b[1;32;40m' + time1 + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
-else:
-    if time1 == '0':
-        print('\x1b[0;30;41m ' + tub1[1] + ' \x1b[0m', '\x1b[1;31;40m' + " Harlem-148 St           " + '\x1b[0m', '\x1b[1;31;40m' + time1 + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
-    else:
-        print('\x1b[0;30;41m ' + tub1[1] + ' \x1b[0m', '\x1b[1;32;40m' + " Harlem-148 St           " + '\x1b[0m', '\x1b[1;32;40m' + time1 + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
-if tub2[1] == '1':
-    if time2 == '0':
-        print('\x1b[0;30;41m ' + tub2[1] + ' \x1b[0m', '\x1b[1;31;40m' + " Van Cort Park 242 St    " + '\x1b[0m', '\x1b[1;31;40m' + time2 + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
-    else:
-        print('\x1b[0;30;41m ' + tub2[1] + ' \x1b[0m', '\x1b[1;32;40m' + " Van Cort Park 242 St    " + '\x1b[0m', '\x1b[1;32;40m' + time2 + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
-elif tub2[1] == '2':
-    if time2 == '0':
-        print('\x1b[0;30;41m ' + tub2[1] + ' \x1b[0m', '\x1b[1;31;40m' + " Wakefield-241 St        " + '\x1b[0m', '\x1b[1;31;40m' + time2 + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
-    else:
-        print('\x1b[0;30;41m ' + tub2[1] + ' \x1b[0m', '\x1b[1;32;40m' + " Wakefield-241 St        " + '\x1b[0m', '\x1b[1;32;40m' + time2 + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
-else:
-    if time2 == '0':
-        print('\x1b[0;30;41m ' + tub2[1] + ' \x1b[0m', '\x1b[1;31;40m' + " Harlem-148 St           " + '\x1b[0m', '\x1b[1;31;40m' + time2 + '\x1b[0m', '\x1b[1;31;40m' +  "min" + '\x1b[0m', sep="")
-    else:
-        print('\x1b[0;30;41m ' + tub2[1] + ' \x1b[0m', '\x1b[1;32;40m' + " Harlem-148 St           " + '\x1b[0m', '\x1b[1;32;40m' + time2 + '\x1b[0m', '\x1b[1;32;40m' +  "min" + '\x1b[0m', sep="")
+new_york = timezone('America/New_York')
+ny_time = datetime.now(new_york)
+
+#Output
+print ("Times Sq-42 St -", ny_time.strftime('%H:%M:%S'))
+printRoute(tub1[1],destinations[tub1[1]],time1)
+printRoute(tub2[1],destinations[tub2[1]],time2)
